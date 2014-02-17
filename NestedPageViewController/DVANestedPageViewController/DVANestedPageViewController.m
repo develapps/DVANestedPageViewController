@@ -27,9 +27,6 @@ const void *DVANestedPageViewControllerPositionKey = &DVANestedPageViewControlle
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
-    // need to make swizzling to change the viewWill/DidAppear and viewWill/DidDissapear to my custom implementation an send an NSNotification
-    [self swizzleViewControllerLifecycle];
 
     // start listening for notifications
     NSNotificationCenter *center = [NSNotificationCenter defaultCenter];
@@ -111,27 +108,6 @@ const void *DVANestedPageViewControllerPositionKey = &DVANestedPageViewControlle
     
     return nil;
 
-}
-
-- (void)swizzleViewControllerLifecycle
-{
-    Method original, swizzled;
-    
-    original = class_getInstanceMethod([UIViewController class], @selector(viewWillAppear:));
-    swizzled = class_getInstanceMethod([UIViewController class], @selector(dva_swizzled_viewWillAppear:));
-    method_exchangeImplementations(original, swizzled);
-    
-    original = class_getInstanceMethod([UIViewController class], @selector(viewDidAppear:));
-    swizzled = class_getInstanceMethod([UIViewController class], @selector(dva_swizzled_viewDidAppear:));
-    method_exchangeImplementations(original, swizzled);
-    
-    original = class_getInstanceMethod([UIViewController class], @selector(viewWillDisappear:));
-    swizzled = class_getInstanceMethod([UIViewController class], @selector(dva_swizzled_viewWillDisappear:));
-    method_exchangeImplementations(original, swizzled);
-    
-    original = class_getInstanceMethod([UIViewController class], @selector(viewDidDisappear:));
-    swizzled = class_getInstanceMethod([UIViewController class], @selector(dva_swizzled_viewDidDisappear:));
-    method_exchangeImplementations(original, swizzled);
 }
 
 

@@ -11,6 +11,30 @@
 
 @implementation UIViewController (Notifications)
 
++ (void)load
+{
+    static dispatch_once_t onceToken;
+    dispatch_once(&onceToken, ^{
+        Method original, swizzled;
+        
+        original = class_getInstanceMethod([UIViewController class], @selector(viewWillAppear:));
+        swizzled = class_getInstanceMethod([UIViewController class], @selector(dva_swizzled_viewWillAppear:));
+        method_exchangeImplementations(original, swizzled);
+        
+        original = class_getInstanceMethod([UIViewController class], @selector(viewDidAppear:));
+        swizzled = class_getInstanceMethod([UIViewController class], @selector(dva_swizzled_viewDidAppear:));
+        method_exchangeImplementations(original, swizzled);
+        
+        original = class_getInstanceMethod([UIViewController class], @selector(viewWillDisappear:));
+        swizzled = class_getInstanceMethod([UIViewController class], @selector(dva_swizzled_viewWillDisappear:));
+        method_exchangeImplementations(original, swizzled);
+        
+        original = class_getInstanceMethod([UIViewController class], @selector(viewDidDisappear:));
+        swizzled = class_getInstanceMethod([UIViewController class], @selector(dva_swizzled_viewDidDisappear:));
+        method_exchangeImplementations(original, swizzled);
+    });
+}
+
 + (NSString *)dva_viewControllerWillAppearNotificationName
 {
     return @"dva_viewWillAppearNotificationName";
