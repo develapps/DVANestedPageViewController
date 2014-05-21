@@ -167,6 +167,47 @@ const void *DVANestedPageViewControllerPositionKey = &DVANestedPageViewControlle
                      }];
 }
 
+- (void)slideLeftAnimated:(BOOL)animated completion:(void (^)(BOOL finished))completion
+{
+    NSInteger slideToSection = self.currentIndexPath.section - 1;
+
+    if (slideToSection < 0) {
+        if (completion) {
+            completion(NO);
+        }
+        return;
+    }
+
+    NSIndexPath *newIndexPath = [NSIndexPath indexPathForItem:self.currentIndexPath.row inSection:slideToSection];
+
+    [self.pageViewController setViewControllers:@[[self viewControllerAtSection:newIndexPath.section]]
+                                      direction:UIPageViewControllerNavigationDirectionReverse
+                                       animated:animated
+                                     completion:completion];
+}
+
+
+- (void)slideRightAnimated:(BOOL)animated completion:(void (^)(BOOL finished))completion
+{
+    NSInteger slideToSection = self.currentIndexPath.section + 1;
+    NSInteger numberOfSections = [self.sections integerValue];
+
+    if (slideToSection >= numberOfSections) {
+        if (completion) {
+            completion(NO);
+        }
+        return;
+    }
+
+    NSIndexPath *newIndexPath = [NSIndexPath indexPathForItem:self.currentIndexPath.row inSection:slideToSection];
+
+    [self.pageViewController setViewControllers:@[[self viewControllerAtSection:newIndexPath.section]]
+                                      direction:UIPageViewControllerNavigationDirectionForward
+                                       animated:animated
+                                     completion:completion];
+}
+
+
 
 #pragma mark - DVAVerticalPageViewControllerDataSource
 
