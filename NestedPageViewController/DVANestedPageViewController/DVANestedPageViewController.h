@@ -38,5 +38,7 @@ extern const void *DVANestedPageViewControllerPositionKey;
 
 - (void)reloadData;
 - (void)scrollToIndexPath:(NSIndexPath *)indexPath;
+- (void)slideLeftAnimated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
+- (void)slideRightAnimated:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 
 @end
