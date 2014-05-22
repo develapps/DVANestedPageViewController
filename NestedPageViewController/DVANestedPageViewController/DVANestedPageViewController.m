@@ -76,9 +76,9 @@ const void *DVANestedPageViewControllerPositionKey = &DVANestedPageViewControlle
     if ([self.sections unsignedIntegerValue] > 0) {
         NSUInteger initialSectionNumber = 0;
 
-        NSUInteger proposedInitialSectionNumber = self.initialPosition;
-        if (proposedInitialSectionNumber <= [self.sections unsignedIntegerValue]) {
-            initialSectionNumber = proposedInitialSectionNumber;
+        if (self.initialPosition > 0 && self.initialPosition <= [self.sections unsignedIntegerValue]) {
+            initialSectionNumber = self.initialPosition;
+            self.initialPosition = -1;
         }
 
         NSArray *viewControllers = @[[self viewControllerAtSection:initialSectionNumber]];

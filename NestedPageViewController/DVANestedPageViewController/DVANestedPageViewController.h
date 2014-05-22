@@ -35,7 +35,7 @@ extern const void *DVANestedPageViewControllerPositionKey;
 @property (nonatomic, strong, readonly) NSIndexPath *currentIndexPath;
 @property (nonatomic, weak) IBOutlet id<DVANestedPageViewControllerDataSource> dataSource;
 @property (nonatomic, weak) IBOutlet id<DVANestedPageViewControllerDelegate> delegate;
-@property (nonatomic, readwrite) NSUInteger initialPosition;
+@property (nonatomic, readwrite) NSInteger initialPosition;
 
 - (void)reloadData;
 - (void)scrollToIndexPath:(NSIndexPath *)indexPath;
