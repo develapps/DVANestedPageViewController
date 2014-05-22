@@ -74,7 +74,14 @@ const void *DVANestedPageViewControllerPositionKey = &DVANestedPageViewControlle
 - (void)loadViewControllers
 {
     if ([self.sections unsignedIntegerValue] > 0) {
-        NSArray *viewControllers = @[[self viewControllerAtSection:0]];
+        NSUInteger initialSectionNumber = 0;
+
+        if (self.initialPosition > 0 && self.initialPosition <= [self.sections unsignedIntegerValue]) {
+            initialSectionNumber = self.initialPosition;
+            self.initialPosition = -1;
+        }
+
+        NSArray *viewControllers = @[[self viewControllerAtSection:initialSectionNumber]];
         [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
     }
 }
