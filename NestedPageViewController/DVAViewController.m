@@ -59,7 +59,6 @@
     }
 }
 
-
 #pragma mark - DVANestedPageViewControllerDataSource
 
 - (NSUInteger)nestedPageViewControllerNumberOfSections:(DVANestedPageViewController *)nestedPageViewController
@@ -75,32 +74,31 @@
 - (UIViewController *)nestedPageViewController:(DVANestedPageViewController *)nestedPageViewController viewControllerAtIndexPath:(NSIndexPath *)indexPath
 {
     UIViewController *viewController = [[UIViewController alloc] init];
-    viewController.view.backgroundColor = self.colors[[NSString stringWithFormat:@"%d%d", indexPath.section, indexPath.row]];
+    viewController.view.backgroundColor = self.colors[[NSString stringWithFormat:@"%ld%ld", (long)indexPath.section, (long)indexPath.row]];
     
     return viewController;
 }
-
 
 #pragma mark - DVANestedPageViewControllerDelegate
 
 - (void)nestedPageViewController:(DVANestedPageViewController *)nestedPageViewController viewControllerWillAppear:(UIViewController *)viewController atIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s section: %d  row: %d", __PRETTY_FUNCTION__, indexPath.section, indexPath.row);
+    NSLog(@"%s section: %ld  row: %ld", __PRETTY_FUNCTION__, (long)indexPath.section, (long)indexPath.row);
 }
 
 - (void)nestedPageViewController:(DVANestedPageViewController *)nestedPageViewController viewControllerDidAppear:(UIViewController *)viewController atIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s section: %d  row: %d", __PRETTY_FUNCTION__, indexPath.section, indexPath.row);
+    NSLog(@"%s section: %ld  row: %ld", __PRETTY_FUNCTION__, (long)indexPath.section, (long)indexPath.row);
 }
 
 - (void)nestedPageViewController:(DVANestedPageViewController *)nestedPageViewController viewControllerWillDisappear:(UIViewController *)viewController atIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s section: %d  row: %d", __PRETTY_FUNCTION__, indexPath.section, indexPath.row);
+    NSLog(@"%s section: %ld  row: %ld", __PRETTY_FUNCTION__, (long)indexPath.section, (long)indexPath.row);
 }
 
 - (void)nestedPageViewController:(DVANestedPageViewController *)nestedPageViewController viewControllerDidDisappear:(UIViewController *)viewController atIndexPath:(NSIndexPath *)indexPath
 {
-    NSLog(@"%s section: %d  row: %d", __PRETTY_FUNCTION__, indexPath.section, indexPath.row);
+    NSLog(@"%s section: %ld  row: %ld", __PRETTY_FUNCTION__, (long)indexPath.section, (long)indexPath.row);
 }
 
 @end

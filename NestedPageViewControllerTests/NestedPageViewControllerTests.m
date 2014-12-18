@@ -7,9 +7,14 @@
 //
 
 #import <XCTest/XCTest.h>
+#import <OCMock.h>
 #import "DVANestedPageViewController.h"
 
-@interface NestedPageViewControllerTests : XCTestCase
+@interface NestedPageViewControllerTests : XCTestCase {
+    DVANestedPageViewController *nestedPageViewController;
+    id dataSource;
+    UIViewController *foo;
+}
 
 @end
 
@@ -19,18 +24,55 @@
 {
     [super setUp];
 
-    
+    nestedPageViewController = [DVANestedPageViewController new];
+    dataSource = OCMProtocolMock(@protocol(DVANestedPageViewControllerDataSource));
+    nestedPageViewController.dataSource = dataSource;
+    foo = [[UIViewController alloc] init];
 }
 
 - (void)tearDown
 {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+    dataSource = nil;
+    nestedPageViewController = nil;
+    foo = nil;
+    
     [super tearDown];
 }
 
-- (void)testExample
+- (void)testThatScrollToIndexPathWorksForJustSections
 {
-    XCTFail(@"No implementation for \"%s\"", __PRETTY_FUNCTION__);
+    OCMExpect([dataSource nestedPageViewController:nestedPageViewController numberOfViewControllersAtSection:1]).andReturn((NSUInteger)1);
+    OCMExpect([dataSource nestedPageViewController:nestedPageViewController viewControllerAtIndexPath:[NSIndexPath indexPathForRow:0 inSection:1]]).andReturn(foo);
+    
+    [nestedPageViewController viewDidLoad];
+    NSIndexPath *movedIndexPath = [NSIndexPath indexPathForRow:0 inSection:1];
+    [nestedPageViewController scrollToIndexPath:movedIndexPath];
+    NSIndexPath *returnedIndexPath = [nestedPageViewController currentIndexPath];
+    
+    XCTAssertEqualObjects(movedIndexPath, returnedIndexPath, @"NSIndexPath's must be the same");
+    OCMVerifyAll(dataSource);
+}
+
+- (void)testThatScrollToIndexPathWorksAlsoForRows
+{
+    OCMExpect([dataSource nestedPageViewController:nestedPageViewController numberOfViewControllersAtSection:1]).andReturn((NSUInteger)4);
+    OCMExpect([dataSource nestedPageViewController:nestedPageViewController viewControllerAtIndexPath:[NSIndexPath indexPathForRow:1 inSection:1]]).andReturn(foo);
+    
+    [nestedPageViewController viewDidLoad];
+    NSIndexPath *movedIndexPath = [NSIndexPath indexPathForRow:1 inSection:1];
+    [nestedPageViewController scrollToIndexPath:movedIndexPath];
+    NSIndexPath *returnedIndexPath = [nestedPageViewController currentIndexPath];
+
+    OCMVerifyAll(dataSource);
+    XCTAssertEqualObjects(movedIndexPath, returnedIndexPath, @"NSIndexPath's must be the same");
+}
+
+- (void)testThatScrollToUnexistingIndexPathCrashes
+{
+    [nestedPageViewController viewDidLoad];
+    NSIndexPath *movedIndexPath = [NSIndexPath indexPathForRow:1 inSection:1];
+
+    XCTAssertThrows([nestedPageViewController scrollToIndexPath:movedIndexPath], @"Exception must be raised when scrolling to an unexisting indexPath");
 }
 
 @end
