@@ -6,18 +6,12 @@
 //  Copyright (c) 2013 Develapps. All rights reserved.
 //
 
-@class DVAVerticalPageViewController;
-
-@protocol DVAVerticalPageViewControllerDataSource <NSObject>
-
-- (NSUInteger)verticalPageViewControllerNumberOfViewControllers:(DVAVerticalPageViewController *)verticalPageViewController;
-- (UIViewController *)verticalPageViewController:(DVAVerticalPageViewController *)verticalPageViewController viewControllerAtIndex:(NSUInteger)index;
-
-@end
+@class DVANestedPageViewController;
 
 @interface DVAVerticalPageViewController : UIViewController
 
-@property (nonatomic, weak) id<DVAVerticalPageViewControllerDataSource> dataSource;
-@property (nonatomic) NSUInteger section;
+@property (nonatomic, strong) NSIndexPath *indexPath;
+
+- (instancetype)initWithHorizontal:(DVANestedPageViewController *)horizontal;
 
 @end

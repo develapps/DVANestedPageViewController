@@ -14,10 +14,20 @@
 
 @property (nonatomic, strong) UIPageViewController *pageViewController;
 @property (nonatomic, strong) NSNumber *rows;
+@property (nonatomic, weak) DVANestedPageViewController *horizontal;
 
 @end
 
 @implementation DVAVerticalPageViewController
+
+- (instancetype)initWithHorizontal:(DVANestedPageViewController *)horizontal
+{
+    if (self = [super initWithNibName:nil bundle:nil]) {
+        _horizontal = horizontal;
+    }
+    
+    return self;
+}
 
 - (void)viewDidLoad
 {
@@ -32,7 +42,7 @@
 {
     [super viewWillAppear:animated];
     
-    UIViewController *startingViewController = [self viewControllerAtIndex:0];
+    UIViewController *startingViewController = [self viewControllerForRow:self.indexPath.row];
     NSArray *viewControllers = @[startingViewController];
     [self.pageViewController setViewControllers:viewControllers direction:UIPageViewControllerNavigationDirectionForward animated:NO completion:nil];
 }
@@ -50,7 +60,7 @@
 - (NSNumber *)rows
 {
     if (!_rows) {
-        _rows = @([self.dataSource verticalPageViewControllerNumberOfViewControllers:self]);
+        _rows = @([self.horizontal.dataSource nestedPageViewControllerNumberOfSections:self.horizontal]);
     }
     
     return _rows;
@@ -69,7 +79,7 @@
     }
     
     index--;
-    return [self viewControllerAtIndex:index];
+    return [self viewControllerForRow:index];
 }
 
 - (UIViewController *)pageViewController:(UIPageViewController *)pageViewController viewControllerAfterViewController:(UIViewController *)viewController
@@ -78,23 +88,15 @@
     NSUInteger index = indexPathAfter.row;
     
     index++;
-    if (index == [self.rows unsignedIntegerValue]) {
-        return nil;
-    }
+    if (index == [self.rows unsignedIntegerValue]) return nil;
     
-    return [self viewControllerAtIndex:index];
+    return [self viewControllerForRow:index];
 }
 
-- (UIViewController *)viewControllerAtIndex:(NSUInteger)index
-{
-    NSUInteger numberOfViewControllers = [self.dataSource verticalPageViewControllerNumberOfViewControllers:self];
-    
-    if (numberOfViewControllers == 0) {
-        return nil;
-    }
-    
-    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:index inSection:self.section];
-    UIViewController *viewController = [self.dataSource verticalPageViewController:self viewControllerAtIndex:index];
+- (UIViewController *)viewControllerForRow:(NSUInteger)row
+{    
+    NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:self.indexPath.section];
+    UIViewController *viewController = [self.horizontal.dataSource nestedPageViewController:self.horizontal viewControllerAtIndexPath:indexPath];
     
     // set position via associated object
     objc_setAssociatedObject(viewController, DVANestedPageViewControllerPositionKey, indexPath, OBJC_ASSOCIATION_RETAIN_NONATOMIC);
